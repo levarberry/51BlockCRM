@@ -1,0 +1,6 @@
+{
+    "require": {
+        "twitter/bootstrap": "^4.1",
+        "components/font-awesome": "^5.0"
+    }
+}
