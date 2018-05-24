@@ -6,7 +6,8 @@
       $('#services-tab').tab('show');
   }
 
-  function delService(frm,id){
+function delService(frm,id){
+     // alert(frm);
       frm.submit();
   }
 </script>
@@ -57,14 +58,15 @@ $res_services = $con->query($services);
 
 echo mysqli_error($con);
 while ($obj = $res_services->fetch_object()) {
-    $trs .= "<form method='POST'><input type='hidden' name='action' value='deleteContact'>";
-    $trs .= "<input type='hidden' name='account_services_service_id' value='". $obj->account_services_service_id . "'>";
+    $trs .= "<form method='POST'><input type='hidden' name='action' value='deleteService'>";
+    $trs .= "<input type='hidden' name='account_services_id' value='". $obj->account_services_id . "'>";
     $trs .= "<tr><td>".  $obj->service_name . "</td>";
     $trs .= "<td>".  $obj->owner_name . "</td>";
-    $trs .= "<td>".  $obj->account_services_url . "</td>";
+    $trs .= "<td><a target='_new' href='http://".  $obj->account_services_url . "'>" . $obj->account_services_url   . "  </a></td>";
     $trs .= "<td>$".  $obj->account_services_price . "</td>";
-    $trs .= "<td><button type='buton' class='btn btn-danger'>Delete</button></td>";
-    $trs .="</tr>";
+    $trs .= "<td>
+              <button type='buton' class='btn btn-danger' onClick='delService(this.form," . $obj->account_services_id . ")'>Delete</button></td>";
+    $trs .="</tr></form>";
     
     
 }
@@ -92,7 +94,7 @@ while ($obj = $res_services->fetch_object()) {
                 Price
             </th>
             <th>
-                <button type="buton" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Add ..</button>
+                 
             </th>
         </tr>
         <tr>
@@ -141,5 +143,9 @@ function service_add($con,$account_id) {
     $account_services_price = $_POST['account_services_price'];
     
     $stmt->execute();
+}
+function service_delete($con) {
+    $del = "delete from account_services where account_services_id = " . $_POST['account_services_id'];
+    $con->query($del);
 }
 ?>

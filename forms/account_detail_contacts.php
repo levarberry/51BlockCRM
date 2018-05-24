@@ -84,8 +84,7 @@ while ($obj = $res_logins->fetch_object()) {
             <th>
                 Email
             </th>
-            <th>
-                <button type="buton" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Add </button>
+            <th> 
             </th>
         </tr>
         <tr>

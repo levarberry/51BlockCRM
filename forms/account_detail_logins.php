@@ -5,6 +5,9 @@
   function showLoginTab() {
       $('#logins-tab').tab('show');
   }
+  function delLogin(frm,id){
+      frm.submit();
+  }
 </script>
 <?php
 $logins = "Select * from account_logins where account_id=$account_id";$trs = "";
@@ -18,7 +21,7 @@ switch ($action) {
     case "addLogin":
         login_add($con,$account_id);
         echo " &nbsp;&nbsp;<span></span>";
-        echo "<script>toastr.success(\"Added Login\");</script>";
+        echo "<script>toastr.success(\"..Added Login\");</script>";
         echo "<script>showLoginTab();</script>";
         break;
     case "saveLogin":
@@ -27,9 +30,10 @@ switch ($action) {
         account_save($con);
         break;
     case "deleteLogin":
-        account_delete($con);
+        login_delete($con);
         echo " &nbsp;&nbsp;<span></span>";
-        echo "<script>toastr.success(\"Removed\");</script>";
+        echo "<script>toastr.success(\"Login Removed\");</script>";
+        echo "<script>showLoginTab();</script>";
         break;
     case "nada":
         break;
@@ -43,11 +47,14 @@ $res_logins = $con->query($logins);
 
 echo mysqli_error($con);
 while ($obj = $res_logins->fetch_object()) {
+    $trs .= "<form method='POST'><input type='hidden' name='action' value='deleteLogin'>";
+    $trs .= "<input type='hidden' name='account_login_id' value='". $obj->account_login_id . "'>";
+   
     $trs .= "<tr><td>".  $obj->account_login_name . "</td>";
     $trs .= "<td>".  $obj->account_login_url . "</td>";
     $trs .= "<td>".  $obj->account_login_username . "</td>";
     $trs .= "<td>".  $obj->account_login_password . "</td>";
-    $trs .= "<td><button type='buton' class='btn btn-danger'>Delete</button></td>";
+    $trs .= "<td><button type='buton' onclick='delLogin(this.form,1);' class='btn btn-danger'>Delete</button></td>";
     $trs .="</tr>";
     
     
@@ -76,7 +83,7 @@ while ($obj = $res_logins->fetch_object()) {
                 Password
             </th>
             <th>
-                <button type="buton" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Add Login</button>
+               
             </th>
         </tr>
         <tr>
@@ -115,5 +122,9 @@ function login_add($con,$account_id) {
     $account_login_password = $_POST['account_login_password'];
     
     $stmt->execute();
+}
+function login_delete($con) {
+    $del = "delete from account_logins where account_login_id = " . $_POST['account_login_id'];
+    $con->query($del);
 }
 ?>
